@@ -54,4 +54,38 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     }
+
+    let buttons = [
+        "Супер хит",
+        'Новинка',
+        "С мясом",
+        "Вегетарианская",
+        "С курицей",
+        "Без лука",
+        "С грибами",
+        "С морепродуктами",
+        "Барбекью"
+    ];
+
+    const list = document.querySelector('.filter-common');
+    if (list) {
+        // list.textContent = "hello<br>world"
+        // list.innerHTML = "<button>hello</button><button>world</button>"
+        // list.outerHTML = "<div class='popup-filter__checkbox active'><button>asdlf</button></div>"
+
+        for(let i = 0; i < buttons.length; i = i + 1) {
+            let newElement = document.createElement('button')
+            newElement.textContent = buttons[i];
+            list.append(newElement)
+        }
+    }
 });
+
+// let m = [5, 4, 5, 2];
+// console.log(m[0])
+// m[1] = 7
+// console.log(m);
+// m[10] = 9
+// console.log(m[10])
+// m.push(588)
+// m.length
