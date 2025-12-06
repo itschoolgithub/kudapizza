@@ -110,17 +110,22 @@ document.addEventListener('DOMContentLoaded', function () {
         ]
     ];
 
-    const list = document.querySelector('.filter-common');
-    if (list) {
-        // list.textContent = "hello<br>world"
-        // list.innerHTML = "<button>hello</button><button>world</button>"
-        // list.outerHTML = "<div class='popup-filter__checkbox active'><button>asdlf</button></div>"
-
-        for(let i = 0; i < buttons.length; i = i + 1) {
-            let newElement = document.createElement('button')
-            newElement.textContent = buttons[i];
-            list.append(newElement)
+    const groups = document.querySelector('.popup-filter__groups');
+    if (groups) {
+        let groupHtml = '';
+        for(let i = 0; i < titles.length; i++) {
+            let buttonsHtml = '';
+            for(let j = 0; j < buttons[i].length; j++) {
+                buttonsHtml = buttonsHtml + `<button>${buttons[i][j]}</button>`
+            }
+            groupHtml = groupHtml + `<div class="popup-filter__group">
+                        <h4>${titles[i]}</h4>
+                        <div class="popup-filter__checkbox">
+                            ${buttonsHtml}
+                        </div>
+                    </div>`;
         }
+        groups.innerHTML = groupHtml;
     }
 });
 
