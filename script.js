@@ -1,36 +1,22 @@
-// выводит окошко на экран
-// alert('222');
-
-// Только раскрытие текста
-// document.querySelector('.info__link').addEventListener('click', function () {
-//     this.remove()
-//     document.querySelector('.info__text').classList.add('info__text--active');
-// })
-
-let buttonText;
-let buttonText2 = "Скрыть текст";
-
-// Раскрытие-сворачивание
-// document.querySelector('.info__link').addEventListener('click', function () {
-//     document.querySelector('.info__text').classList.toggle('info__text--active');
-//     if (this.textContent == 'Показать полностью') {
-//         this.textContent = "Скрыть текст";
-//     } else {
-//         this.textContent = "Показать полностью";
-//     }
-// })
-
-document.querySelector('.info__link').addEventListener('click', function () {
-    document.querySelector('.info__text').classList.toggle('info__text--active');
-    buttonText = this.textContent;
-    this.textContent = buttonText2;
-    buttonText2 =  buttonText;
-})
-
 // ждем полной загрузки страницы
 document.addEventListener('DOMContentLoaded', function () {
-    const popupFilter = document.querySelector('.popup-filter');
+    
+    // раскрытие текста в блоке info
+    const infoLink = document.querySelector('.info__link')
+    if (infoLink) {
+        infoLink.addEventListener('click', function () {
+            const infoText = document.querySelector('.info__text')
+            if (infoText) {
+                infoText.classList.toggle('info__text--active');
+                let buttonText = this.textContent;
+                this.textContent = this.dataset.hello;
+                this.dataset.hello =  buttonText;
+            }
+        })
+    }
 
+    // открытие попапа фильтра
+    const popupFilter = document.querySelector('.popup-filter');
     if (popupFilter) {
         const buttonPopup = document.querySelector('.catalog__filter');
         if (buttonPopup) {
@@ -55,14 +41,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    let titles = [
+    // формирование групп фильтров в попапе
+    const titles = [
         "Общее",
         "Сыр",
         "Мясо",
         "Компонент"
     ];
 
-    let buttons = [
+    const buttons = [
         [
             "Супер хит",
             'Новинка',
@@ -128,19 +115,28 @@ document.addEventListener('DOMContentLoaded', function () {
         groups.innerHTML = groupHtml;
     }
 
-    // Задача: сгенерировать кнопки от 1 - 10
-    // 1. Ищем на странице элемент .here
-    // 2. Проверяем нашли ли мы этот элемент
-    // 3. Создаем переменную для накопления html-кнопок
-    // 4. Запускаем цикл от 1 до 10
-    // 5. Наращиваем переменную html-кнопок с использованием текущего индекса
-    // 6. После цикла вставляем полученный html в нужное место через outerHTML
+    // формирование пагинации
+    const n = 1000;
+    const here = document.querySelector('.here');
+    if (here) {
+        let paginationHtml = '';
+        for (let i = 1; i <= n; i++) {
+            if (i <= 3 || i > n - 3) {
+                paginationHtml = paginationHtml + `<li>
+                        <a href="#" class="pagination__button">${i}</a>
+                    </li>`;
+            }
+            if (i == 3) {
+                paginationHtml = paginationHtml + `<li>
+                        <span>...</span>
+                    </li>`;
+            }
+        }
+        here.outerHTML = paginationHtml;
+    }
 
-    // Задача 2: сгенерировать кнопки от 1 до 1000,
-    // но выводить только первые три и последние три
-    // между ними три точки
-
-    let categories = [
+    // формирование категорий на главной странице
+    const categories = [
         {
             icon: "icon-sale",
             title: 'Акции',
@@ -183,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
     ];
 
-    let categoriesList = document.querySelector('.categories__list');
+    const categoriesList = document.querySelector('.categories__list');
     if (categoriesList) {
         let categoriesHtml = '';
         categories.forEach(function (category) {
@@ -192,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 isActive = 'active';
             }
             categoriesHtml = categoriesHtml + `<li>
-                        <a href="#" class="${isActive}">
+                        <a href="#" class="categories__link ${isActive}">
                             <svg width="24" height="24">
                                 <use xlink:href="images/icons/sprite.svg#${category.icon}" />
                             </svg>
@@ -203,46 +199,3 @@ document.addEventListener('DOMContentLoaded', function () {
         categoriesList.innerHTML = categoriesHtml;
     }
 });
-
-// let m = [5, 4, 5, 2];
-// console.log(m[0])
-// m[1] = 7
-// console.log(m);
-// m[10] = 9
-// console.log(m[10])
-// m.push(588)
-// m.length
-
-// let pizzas = [
-//     {
-//         title: '2'
-//     },
-//     {
-//         title: '1',
-//         img: '343',
-//     },
-//     {
-//         title: '3'
-//     },
-//     {
-//         title: '2'
-//     },
-// ];
-
-// pizzas[0].title;
-
-let pizza = {
-    img: 'images/img1',
-    title: 'Пицца',
-    oldPrice: 600,
-    newPrice: 300,
-    isHit: true,
-    history: [
-        699, 650, 600, 700
-    ]
-};
-
-// // pizza['img']
-// alert(pizza.title);
-// pizza.title = 'Пицца Моцарелла';
-// pizza.isFavorite = true;
