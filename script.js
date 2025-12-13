@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const cartItemsBlock = document.querySelector('.cart__items');
         if (cartItemsBlock) {
             let cartItemsHtml = '';
-            cartItems.forEach(function (cartItem) {
+            cartItems.forEach(function (cartItem, itemIndex) {
                 cartItemsHtml += `<div class="cart__item">
                                 <div class="cart__item-about">
                                     <img src="${cartItem.image}" alt="" class="cart__item-img">
@@ -231,9 +231,9 @@ document.addEventListener('DOMContentLoaded', function () {
                                 </div>
                                 <div class="cart__item-numbers">
                                     <div class="cart__item-calc">
-                                        <button class="cart__item-minus">-</button>
+                                        <button class="cart__item-minus" data-idx="${itemIndex}">-</button>
                                         <input type="text" value="${cartItem.quantity}" class="cart__item-quantity">
-                                        <button class="cart__item-plus">+</button>
+                                        <button class="cart__item-plus" data-idx="${itemIndex}">+</button>
                                     </div>
                                     <div class="cart__item-sum">${cartItem.price * cartItem.quantity} ₽</div>
                                 </div>
@@ -247,20 +247,29 @@ document.addEventListener('DOMContentLoaded', function () {
     const cart = document.querySelector('.cart__items');
     if (cart) {
         cart.addEventListener('click', function (event) {
-            if (event.target.closest('.cart__item-plus')) {
-                const container = event.target.closest('.cart__item-calc');
+            let buttonPlus = event.target.closest('.cart__item-plus');
+            if (buttonPlus) {
+                // alert('Текущий индекс товара: ' + buttonPlus.dataset.idx);
+                // alert('Цена товара: ' + cartItems[buttonPlus.dataset.idx].price);
+                const container = event.target.closest('.cart__item-numbers');
                 const cartInput = container.querySelector('.cart__item-quantity');
                 if (+cartInput.value < 999) {
                     cartInput.value = +cartInput.value + 1;
                 }
+                // alert('Итоговая цена: ' + (+cartInput.value * cartItems[buttonPlus.dataset.idx].price));
+                let total = (+cartInput.value * cartItems[buttonPlus.dataset.idx].price);
+                container.querySelector('.cart__item-sum').textContent = total + ' ₽';
             }
 
-            if (event.target.closest('.cart__item-minus')) {
-                const container = event.target.closest('.cart__item-calc');
+            let buttonMinus = event.target.closest('.cart__item-minus');
+            if (buttonMinus) {
+                const container = event.target.closest('.cart__item-numbers');
                 const cartInput = container.querySelector('.cart__item-quantity');
                 if (+cartInput.value > 0) {
                     cartInput.value = +cartInput.value - 1;
                 }
+                let total = (+cartInput.value * cartItems[buttonMinus.dataset.idx].price);
+                container.querySelector('.cart__item-sum').textContent = total + ' ₽';
             }
         });
     }
