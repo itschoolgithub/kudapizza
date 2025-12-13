@@ -198,4 +198,29 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         categoriesList.innerHTML = categoriesHtml;
     }
+
+    // увеличение и уменьшение количества товара
+    const buttonPlus = document.querySelector('.cart__item-plus');
+    if (buttonPlus) {
+        buttonPlus.addEventListener('click', function () {
+            const cartInput = document.querySelector('.cart__item-quantity')
+            if (cartInput) {
+                if (+cartInput.value < 999) {
+                    cartInput.value = +cartInput.value + 1;
+                }
+            }
+        });
+    }
+
+    const buttonMinus = document.querySelector('.cart__item-minus');
+    if (buttonMinus) {
+        buttonMinus.addEventListener('click', function () {
+            const cartInput = document.querySelector('.cart__item-quantity')
+            if (cartInput) {
+                if (+cartInput.value > 0) {
+                    cartInput.value = +cartInput.value - 1;
+                }
+            }
+        });
+    }
 });
