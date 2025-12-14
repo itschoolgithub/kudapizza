@@ -1,3 +1,5 @@
+let totalCart = 0;
+
 // ждем полной загрузки страницы
 document.addEventListener('DOMContentLoaded', function () {
     
@@ -223,6 +225,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
     ];
 
+    const cartTotalHtml = document.querySelectorAll('.cartTotalHtml');
     const cartItemsBlock = document.querySelector('.cart__items');
     if (cartItemsBlock) {
         let cartItemsHtml = '';
@@ -244,7 +247,13 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <div class="cart__item-sum">${(cartItem.price * cartItem.quantity).toLocaleString()} ₽</div>
                             </div>
                         </div>`;
+            totalCart += cartItem.price * cartItem.quantity;
         });
+        if (cartTotalHtml.length) {
+            cartTotalHtml.forEach(function (cartTotalItem) {
+                cartTotalItem.textContent = totalCart.toLocaleString()
+            });
+        }
         cartItemsBlock.innerHTML = cartItemsHtml;
     }
 
