@@ -225,7 +225,6 @@ document.addEventListener('DOMContentLoaded', function () {
         },
     ];
 
-    const cartTotalHtml = document.querySelectorAll('.cartTotalHtml');
     const cartItemsBlock = document.querySelector('.cart__items');
     if (cartItemsBlock) {
         let cartItemsHtml = '';
@@ -241,7 +240,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             <div class="cart__item-numbers">
                                 <div class="cart__item-calc">
                                     <button class="cart__item-minus" data-index="${itemIndex}">-</button>
-                                    <input type="text" value="${cartItem.quantity}" class="cart__item-quantity">
+                                    <input type="number" value="${cartItem.quantity}"
+                                        class="cart__item-quantity" data-index="${itemIndex}">
                                     <button class="cart__item-plus" data-index="${itemIndex}">+</button>
                                 </div>
                                 <div class="cart__item-sum">${(cartItem.price * cartItem.quantity).toLocaleString()} ₽</div>
@@ -249,12 +249,35 @@ document.addEventListener('DOMContentLoaded', function () {
                         </div>`;
             totalCart += cartItem.price * cartItem.quantity;
         });
-        if (cartTotalHtml.length) {
-            cartTotalHtml.forEach(function (cartTotalItem) {
-                cartTotalItem.textContent = totalCart.toLocaleString()
+        renderTotalPrice(cartItems);
+        cartItemsBlock.innerHTML = cartItemsHtml;
+
+        const cartInputs = document.querySelectorAll('.cart__item-quantity');
+        if (cartInputs.length) {
+            cartInputs.forEach(function (cartInput) {
+                cartInput.addEventListener('input', function () {
+                    if (this.value === '')
+                        this.value = 0;
+                    if (this.value > 999)
+                        this.value = 999;
+                    if (this.value < 0)
+                        this.value = 0;
+                    this.value = +this.value;
+                    const cartItemIndex = this.dataset.index;
+                    cartItems[cartItemIndex].quantity = this.value;
+
+                    const cartItem = cartItems[cartItemIndex];
+                    const total = cartItem.price * cartItem.quantity;
+
+                    const container = this.closest('.cart__item-numbers');
+                    const sumHtml = container.querySelector('.cart__item-sum');
+                    if (sumHtml) {
+                        sumHtml.textContent = total.toLocaleString() + ' ₽';
+                    }
+                    renderTotalPrice(cartItems);
+                }); 
             });
         }
-        cartItemsBlock.innerHTML = cartItemsHtml;
     }
 
     // увеличение и уменьшение количества товара
@@ -269,6 +292,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 const cartInput = container.querySelector('.cart__item-quantity');
                 if (+cartInput.value < 999) {
                     cartInput.value = +cartInput.value + 1;
+                    cartItems[productIndex].quantity = cartInput.value;
+                    // отобразить новую итоговую цену
+                    renderTotalPrice(cartItems);
                 }
                 const total = (+cartInput.value * cartItem.price);
                 container.querySelector('.cart__item-sum').textContent = total + ' ₽';
@@ -282,6 +308,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 const cartInput = container.querySelector('.cart__item-quantity');
                 if (+cartInput.value > 0) {
                     cartInput.value = +cartInput.value - 1;
+                    cartItems[productIndex].quantity = cartInput.value;
+                    // отобразить новую итоговую цену
+                    renderTotalPrice(cartItems);
                 }
                 const total = (+cartInput.value * cartItem.price);
                 container.querySelector('.cart__item-sum').textContent = total + ' ₽';
@@ -290,3 +319,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 });
+
+const cartTotalHtml = document.querySelectorAll('.cartTotalHtml');
+
+function renderTotalPrice(items) {
+    totalCart = 0;
+    items.forEach(function (item) {
+        totalCart += item.price * item.quantity;
+    });
+    if (cartTotalHtml.length) {
+        cartTotalHtml.forEach(function (cartTotalItem) {
+            cartTotalItem.textContent = totalCart.toLocaleString()
+        });
+    }
+}
